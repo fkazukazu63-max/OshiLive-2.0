@@ -395,6 +395,56 @@ header p {
     color: #d1d5db;
 }
 
+.watch-ai-section {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(14, 165, 233, 0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.watch-ai-section h2 {
+    color: #0284c7;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.watch-ai-result {
+    text-align: center;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.watch-ai-result strong {
+    display: block;
+    font-size: 1.2rem;
+    color: #0369a1;
+    margin-bottom: 6px;
+}
+
+.watch-ai-result p {
+    margin-top: 6px;
+}
+
+.watch-ai-schedule {
+    color: #555;
+    font-size: 0.92rem;
+}
+
+.dark-mode .watch-ai-section {
+    background: rgba(14, 165, 233, 0.16);
+}
+
+.dark-mode .watch-ai-result strong {
+    color: #7dd3fc;
+}
+
+.dark-mode .watch-ai-schedule {
+    color: #d1d5db;
+}
+
 /* Mobile layout */
 @media (max-width: 700px) {
     html,
@@ -572,6 +622,20 @@ header p {
         width: 100%;
         max-width: 100%;
         min-height: 44px;
+    }
+
+    .watch-ai-section {
+        margin: 0 0 16px;
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    .watch-ai-section h2 {
+        font-size: 1.15rem;
+    }
+
+    .watch-ai-result {
+        text-align: left;
     }
 
     .edit-content {

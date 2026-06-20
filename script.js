@@ -211,6 +211,7 @@ function toggleFavorite(id) {
     }
 
     updateFavoriteCount();
+    updateWatchAiSection();
 }
 
 function showFavorites() {
@@ -226,6 +227,8 @@ function saveMemo(memoId) {
     const memo = document.getElementById(memoId).value;
     localStorage.setItem(memoId, memo);
 
+    updateWatchAiSection();
+
     alert(currentLanguage === "en" ? "Memo saved!" : "メモを保存しました！");
 }
 function saveSchedule(scheduleId) {
@@ -233,6 +236,7 @@ function saveSchedule(scheduleId) {
     localStorage.setItem(scheduleId, schedule);
 
     updateNextStream();
+    updateWatchAiSection();
 
     alert(currentLanguage === "en" ? "Schedule saved!" : "予定を保存しました！");
 }
@@ -331,6 +335,7 @@ async function autoFetchSchedule(vtuberId) {
 
         renderCards();
         updateNextStream();
+        updateWatchAiSection();
 
         alert("Schedule updated!");
 
@@ -345,6 +350,7 @@ function changeLanguage(language) {
     renderCards();
     updateWelcomeMessage();
     updateLiveNowSection();
+    updateWatchAiSection();
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
@@ -429,6 +435,7 @@ function toggleLiveStatus(id) {
     renderCards();
     updateLiveCount();
     updateLiveNowSection();
+    updateWatchAiSection();
 }
 
 function updateWelcomeMessage() {
@@ -556,10 +563,12 @@ updateLiveCount();
 updateFavoriteCount();
 updateNextStream();
 updateLiveNowSection();
+updateWatchAiSection();
 checkYoutubeLiveStatus();
 
 setInterval(() => {
     updateNextStream();
+    updateWatchAiSection();
 }, 60 * 1000);
 
 setInterval(() => {
@@ -615,6 +624,143 @@ function updateLiveNowSection() {
         })
         .join("");
 }
+function getMemoInterestMatches(memo, tags) {
+    const normalizedTags = (tags || []).map(tag => tag.toLowerCase());
+    const matches = [];
+    const keywordRules = [
+        {
+            labelEn: "gaming",
+            labelJa: "ゲーム",
+            keywords: ["gaming", "game", "valo", "valorant"],
+            tags: ["gaming"]
+        },
+        {
+            labelEn: "singing",
+            labelJa: "歌",
+            keywords: ["singing", "sing", "song", "歌"],
+            tags: ["singing"]
+        },
+        {
+            labelEn: "relax",
+            labelJa: "癒し",
+            keywords: ["relax", "relaxing", "癒し"],
+            tags: ["relaxing"]
+        }
+    ];
+
+    keywordRules.forEach(rule => {
+        const memoMatches = rule.keywords.some(keyword => memo.includes(keyword));
+        const tagMatches = rule.tags.some(tag => normalizedTags.includes(tag));
+
+        if (memoMatches || tagMatches) {
+            matches.push(currentLanguage === "en" ? rule.labelEn : rule.labelJa);
+        }
+    });
+
+    return [...new Set(matches)];
+}
+
+function getNearestFutureScheduleForVTuber(vtuber) {
+    const now = new Date();
+    const scheduleText = localStorage.getItem(`schedule-${vtuber.id}`) || "";
+    let nearest = null;
+
+    scheduleText.split("\n").forEach(line => {
+        const parsed = parseScheduleLine(line);
+
+        if (!parsed || parsed.date <= now) return;
+
+        if (!nearest || parsed.date < nearest.date) {
+            nearest = parsed;
+        }
+    });
+
+    return nearest;
+}
+
+function updateWatchAiSection() {
+    const section = document.getElementById("watchAiSection");
+    const result = document.getElementById("watchAiResult");
+
+    if (!section || !result) return;
+
+    const heading = section.querySelector("h2");
+    if (heading) {
+        heading.innerText = currentLanguage === "en"
+            ? "🤖 Watch Pick AI"
+            : "🤖 今日見るべき配信AI";
+    }
+
+    let bestPick = null;
+
+    vtubers.forEach(vtuber => {
+        const memo = (localStorage.getItem(`memo-${vtuber.id}`) || "").toLowerCase();
+        const tags = vtuber.tags || [];
+        const nextSchedule = getNearestFutureScheduleForVTuber(vtuber);
+        let score = 0;
+        const reasonsEn = [];
+        const reasonsJa = [];
+
+        if (liveStatus[vtuber.id]) {
+            score += 50;
+            reasonsEn.push("live now");
+            reasonsJa.push("現在配信中");
+        }
+
+        if (favorites.includes(vtuber.id)) {
+            score += 25;
+            reasonsEn.push("in your favorites");
+            reasonsJa.push("お気に入り登録済み");
+        }
+
+        const interestMatches = getMemoInterestMatches(memo, tags);
+        if (interestMatches.length > 0) {
+            score += interestMatches.length * 10;
+            reasonsEn.push(`matches ${interestMatches.join(", ")}`);
+            reasonsJa.push(`${interestMatches.join("・")}に合っています`);
+        }
+
+        if (nextSchedule) {
+            score += 15;
+            reasonsEn.push("has an upcoming stream");
+            reasonsJa.push("配信予定があります");
+        }
+
+        if (!bestPick || score > bestPick.score) {
+            bestPick = {
+                vtuber,
+                score,
+                reasonsEn,
+                reasonsJa,
+                nextSchedule
+            };
+        }
+    });
+
+    if (!bestPick || bestPick.score <= 0) {
+        result.innerText = currentLanguage === "en"
+            ? "No strong pick yet. Add favorites, memos, or schedules to improve recommendations."
+            : "まだ強いおすすめはありません。お気に入り・メモ・予定を追加すると精度が上がります。";
+        return;
+    }
+
+    const name = currentLanguage === "en"
+        ? bestPick.vtuber.nameEn
+        : bestPick.vtuber.nameJa;
+    const reasons = currentLanguage === "en"
+        ? bestPick.reasonsEn
+        : bestPick.reasonsJa;
+
+    const scheduleText = bestPick.nextSchedule
+        ? `<p class="watch-ai-schedule">${bestPick.nextSchedule.dateText} - ${bestPick.nextSchedule.title}</p>`
+        : "";
+
+    result.innerHTML = `
+        <strong>${name}</strong>
+        <p>${reasons.join(currentLanguage === "en" ? " / " : " / ")}</p>
+        ${scheduleText}
+    `;
+}
 function updateFavoriteCount() {
     document.getElementById("favoriteCount").innerText =
         `Favorites: ${favorites.length}`;
@@ -664,6 +810,7 @@ function deleteVTuber(id) {
     renderCards();
 
     updateFavoriteCount();
+    updateWatchAiSection();
 }
 function saveCustomVTubers() {
     const defaultIds = ["kuzuha", "kanae", "fuwa", "lauren"];
@@ -758,6 +905,7 @@ function saveEditVTuber(id) {
     saveVTuberEdits();
     closeEditModal();
     renderCards();
+    updateWatchAiSection();
 }
 
 function closeEditModal() {
@@ -833,6 +981,7 @@ sortVTubersByLiveStatus();
 renderCards();
 updateLiveCount();
 updateLiveNowSection();
+updateWatchAiSection();
 
 
 }
@@ -881,6 +1030,7 @@ async function addFromYoutubeUrl() {
 
         renderCards();
         updateFavoriteCount();
+        updateWatchAiSection();
 
         document.getElementById("youtubeUrlInput").value = "";
 

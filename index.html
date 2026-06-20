@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OshiLive 2.0</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#7c3aed">
+</head>
+<body>
+<div id="nextStreamBox" class="next-stream-box">
+    🔔 Next Stream: No schedule yet
+</div>
+<header>
+    <h1>OshiLive 2.0</h1>
+
+    <p id="welcomeMessage">
+        Welcome to OshiLive!
+    </p>
+
+    <p id="liveCount">
+        Live VTubers: 0
+    </p>
+
+    <p id="favoriteCount">
+        Favorites: 0
+    </p>
+
+    <p>
+        Track, organize, and discover your favorite VTubers.
+    </p>
+</header>
+
+<section id="liveNowSection" class="live-now-section">
+    <h2>🔴 LIVE NOW</h2>
+    <div id="liveNowList" class="live-now-list">
+        No one is live now
+    </div>
+</section>
+
+<section class="controls">
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search VTubers..."
+    >
+
+    <button id="favoriteToggleBtn" onclick="toggleFavoriteView()">
+        Favorites Only
+    </button>
+
+    <button onclick="changeLanguage('en')">
+        English
+    </button>
+
+    <button onclick="changeLanguage('ja')">
+        日本語
+    </button>
+
+    <button onclick="toggleDarkMode()">
+        Dark Mode
+    </button>
+
+</section>
+
+<section class="recommend-box">
+
+    <h2>Today's Recommendation</h2>
+
+    <input
+        type="text"
+        id="moodInput"
+        placeholder="Gaming / Singing / Relaxing / Energetic"
+    >
+
+    <button onclick="recommendVTuber()">
+        Recommend
+    </button>
+
+    <p id="recommendResult"></p>
+
+</section>
+<section class="add-box">
+
+    <h2>Add VTuber</h2>
+
+    <input
+        type="text"
+        id="youtubeUrlInput"
+        placeholder="Paste YouTube Channel URL"
+    >
+
+    <button type="button" onclick="addFromYoutubeUrl()">
+    Add VTuber
+</button>
+
+</section>
+<main
+    class="card-container"
+    id="cardContainer">
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>

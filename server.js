@@ -2,16 +2,22 @@ const express = require("express");
 const { google } = require("googleapis");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+
+if (!YOUTUBE_API_KEY) {
+    console.error("Missing required environment variable: YOUTUBE_API_KEY");
+    process.exit(1);
+}
 
 const youtube = google.youtube({
     version: "v3",
-    auth: "AIzaSyC_dl1Bc5pHDLtQB6OH5DpBcM8D2RzpOvM"
+    auth: YOUTUBE_API_KEY
 });
 
 app.use(express.static(__dirname));
 
-app.get("/api/test", (req, res) => {xx
+app.get("/api/test", (req, res) => {
     res.json({
         message: "OshiLive Server Working!"
     });
@@ -31,21 +37,18 @@ app.get("/api/channel", async (req, res) => {
         });
     }
 });
+
 app.get("/api/youtube-live", async (req, res) => {
     const channelId = req.query.channelId;
 
     if (!channelId) {
-        return res.status(400).json({
-            error: "channelId is required"
-        });
+        return res.status(400).json({ error: "channelId is required" });
     }
 
     try {
-        console.log(`Checking live status for: ${channelId}`);
-
         const response = await youtube.search.list({
             part: "snippet",
-            channelId: channelId,
+            channelId,
             eventType: "live",
             type: "video",
             maxResults: 1
@@ -53,67 +56,36 @@ app.get("/api/youtube-live", async (req, res) => {
 
         const isLive = response.data.items.length > 0;
 
-        console.log(
-            `${channelId}: ${isLive ? "LIVE" : "OFFLINE"}`
-        );
-
         res.json({
-            channelId: channelId,
-            isLive: isLive,
-            videoTitle: isLive
-                ? response.data.items[0].snippet.title
-                : null,
-            videoId: isLive
-                ? response.data.items[0].id.videoId
-                : null
+            channelId,
+            isLive,
+            videoTitle: isLive ? response.data.items[0].snippet.title : null,
+            videoId: isLive ? response.data.items[0].id.videoId : null
         });
-
     } catch (error) {
-
-        console.error("========== YOUTUBE API ERROR ==========");
-        console.error("Channel:", channelId);
-        console.error("Message:", error.message);
-
-        if (error.response) {
-            console.error("Status:", error.response.status);
-
-            console.error(
-                "Data:",
-                JSON.stringify(error.response.data, null, 2)
-            );
-        }
-
-        console.error("Full Error:");
-        console.error(error);
-        console.error("======================================");
-
-        res.status(500).json({
-            error: error.message
-        });
+        console.error("YouTube live status error:", error.message);
+        res.status(500).json({ error: error.message });
     }
 });
+
 app.get("/api/upcoming-streams", async (req, res) => {
     const channelId = req.query.channelId;
 
     if (!channelId) {
-        return res.status(400).json({
-            error: "channelId is required"
-        });
+        return res.status(400).json({ error: "channelId is required" });
     }
 
     try {
         const searchResponse = await youtube.search.list({
             part: "snippet",
-            channelId: channelId,
+            channelId,
             eventType: "upcoming",
             type: "video",
             maxResults: 3
         });
 
         const searchItems = searchResponse.data.items || [];
-        const videoIds = searchItems
-            .map(item => item.id.videoId)
-            .filter(Boolean);
+        const videoIds = searchItems.map(item => item.id.videoId).filter(Boolean);
 
         if (videoIds.length === 0) {
             return res.json([]);
@@ -125,7 +97,6 @@ app.get("/api/upcoming-streams", async (req, res) => {
         });
 
         const videos = videosResponse.data.items || [];
-
         const streams = videos.map(video => ({
             title: video.snippet.title,
             scheduledTime: video.liveStreamingDetails?.scheduledStartTime || null,
@@ -134,23 +105,11 @@ app.get("/api/upcoming-streams", async (req, res) => {
         }));
 
         res.json(streams);
-
     } catch (error) {
         console.error("Upcoming streams error:", error.message);
-
-        if (error.response) {
-            console.error(
-                "Data:",
-                JSON.stringify(error.response.data, null, 2)
-            );
-        }
-
-        res.status(500).json({
-            error: error.message
-        });
+        res.status(500).json({ error: error.message });
     }
 });
-
 
 app.get("/api/channel-by-url", async (req, res) => {
     const url = req.query.url;
@@ -183,12 +142,12 @@ app.get("/api/channel-by-url", async (req, res) => {
             image: channel.snippet.thumbnails.high.url,
             youtube: url
         });
-
     } catch (error) {
         console.error("Channel by URL error:", error.message);
         res.status(500).json({ error: error.message });
     }
 });
+
 app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });

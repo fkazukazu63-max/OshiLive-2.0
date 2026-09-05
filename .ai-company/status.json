@@ -1,9 +1,9 @@
 {
   "project": "OshiLive 3.0",
-  "implementationStatus": "awaiting-runtime-secret-configuration",
-  "implementationMessage": "The leaked YouTube API key has been revoked by the project owner. The repository no longer contains an obvious hard-coded Google API key, the server syntax issue is repaired, and the initial CI validation passed. A replacement YOUTUBE_API_KEY still needs to be configured in the runtime environment and the YouTube API flows need an end-to-end validation before release.",
+  "implementationStatus": "awaiting-chatgpt-sites-secret-configuration",
+  "implementationMessage": "The leaked YouTube API key has been revoked. The GitHub repository no longer contains an obvious hard-coded Google API key and its CI validation passes. The current OshiLive 3.0 production workflow is ChatGPT Sites, but this legacy OshiLive-2.0 repository has not been verified as the exact source of the live Sites deployment. Configure YOUTUBE_API_KEY in the ChatGPT Site's owner-only Secrets settings, then validate the YouTube API flows on the Site.",
   "readyForAudit": true,
   "safetyStatus": "review",
-  "safetyMessage": "REVIEW: the exposed credential has been revoked and no obvious hard-coded Google API key remains on the current main branch. Automated syntax/secret checks previously passed. Final SAFE approval is pending runtime configuration of a replacement YOUTUBE_API_KEY and verification that live-status, upcoming-streams, and channel-by-url flows work without regression.",
-  "safetyCheckedAt": "2026-09-05T21:14:32+07:00"
+  "safetyMessage": "REVIEW: credential leakage is remediated, but final SAFE approval is pending two pieces of evidence: (1) YOUTUBE_API_KEY is configured in the OshiLive 3.0 ChatGPT Site Secrets, and (2) live-status, upcoming-streams, and channel-by-url are validated on the actual deployed Site. GitHub CI alone does not prove the current Sites deployment is healthy because the repository-to-Site source mapping is not yet verified.",
+  "safetyCheckedAt": "2026-09-05T21:24:43+07:00"
 }

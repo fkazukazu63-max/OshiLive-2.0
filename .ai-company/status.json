@@ -1,9 +1,9 @@
 {
   "project": "OshiLive 3.0",
-  "implementationStatus": "secret-configured-awaiting-live-site-validation",
-  "implementationMessage": "The previously exposed YouTube API key has been revoked. The owner has configured a replacement YOUTUBE_API_KEY as a secret in the OshiLive 3.0 ChatGPT Site. The GitHub repository no longer contains an obvious hard-coded Google API key and its CI validation passes. Final release validation is now limited to the live ChatGPT Site runtime.",
+  "implementationStatus": "runtime-integration-not-connected",
+  "implementationMessage": "The replacement YOUTUBE_API_KEY has been configured as a ChatGPT Sites secret, but the deployed OshiLive 3.0 page still shows 'Live status is waiting for connection', 'Schedule is waiting for connection', and API-waiting states on liver cards. This confirms the production Site is not yet consuming the YouTube API successfully. The current Sites build appears to remain in placeholder/fallback mode, so adding the secret alone is insufficient; the live Sites source must actually wire server-side YouTube API handlers to YOUTUBE_API_KEY and then be redeployed.",
   "readyForAudit": true,
   "safetyStatus": "review",
-  "safetyMessage": "REVIEW: secret remediation is complete and the replacement YOUTUBE_API_KEY is configured in ChatGPT Sites. Final SAFE approval is pending end-to-end validation on the actual deployed OshiLive 3.0 Site for live-status, upcoming-streams, and channel-by-url. The current ChatGPT session cannot directly execute requests against the live chatgpt.site URL, so deployed runtime evidence is still missing.",
-  "safetyCheckedAt": "2026-09-05T21:28:38+07:00"
+  "safetyMessage": "REVIEW: credential exposure is remediated, but the actual deployed OshiLive 3.0 runtime is not connected to YouTube yet. Do not mark SAFE until the ChatGPT Sites implementation is updated/redeployed and live-status, upcoming-streams, and channel-by-url are demonstrated working on the production Site without exposing the secret.",
+  "safetyCheckedAt": "2026-09-05T21:31:50+07:00"
 }

@@ -1,0 +1,9 @@
+{
+  "project": "OshiLive 3.0",
+  "implementationStatus": "security-remediation-in-progress",
+  "implementationMessage": "AI-company developer/auditor workflow is being introduced. The previously hard-coded YouTube API key has been removed from the working branch and server startup has been repaired.",
+  "readyForAudit": false,
+  "safetyStatus": "stopped",
+  "safetyMessage": "A YouTube API key was previously committed to a public repository. The key must be revoked/rotated in Google Cloud before the project can be marked safe. Automated validation is also being added.",
+  "safetyCheckedAt": "2026-09-05T20:35:00+07:00"
+}

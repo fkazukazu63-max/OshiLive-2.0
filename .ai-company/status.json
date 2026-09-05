@@ -1,9 +1,9 @@
 {
   "project": "OshiLive 3.0",
-  "implementationStatus": "deployed-runtime-blocked-by-secret-configuration",
-  "implementationMessage": "Sites v10 is deployed and the server runtime is active. Production GET /api/youtube/streams returns a sanitized configuration_error because YOUTUBE_API_KEY is not configured under the required variable name. Audit found that an API key had accidentally been entered as the environment variable name; that malformed Sites entry was removed immediately.",
-  "readyForAudit": false,
-  "safetyStatus": "stopped",
-  "safetyMessage": "STOPPED: the deployed code passed local security and quota-design checks, but production API integration cannot be approved until the exposed/misconfigured Google API key is revoked, a new key is stored in Sites with name YOUTUBE_API_KEY and the key itself as the secret value, v10 is redeployed to apply the new environment revision, and production endpoints are re-audited.",
-  "safetyCheckedAt": "2026-09-05T22:32:00+07:00"
+  "implementationStatus": "deployed-and-connected",
+  "implementationMessage": "Sites v11 is deployed. Production live-status data returns structured results for the three configured NIJISANJI channels, repeated requests use the server cache, the known Kuzuha channel resolves successfully, and a non-NIJISANJI channel is rejected.",
+  "readyForAudit": true,
+  "safetyStatus": "safe",
+  "safetyMessage": "SAFE: production API checks passed. The YouTube credential remains in a Sites Secret and is read only by Worker server code; response inspection found no key/secret fields. The runtime does not use search.list, batches channels.list/videos.list, caches refreshes, deduplicates simultaneous work, preserves stale safe data on failures, and recent Worker error logs were empty.",
+  "safetyCheckedAt": "2026-09-05T22:46:30+07:00"
 }

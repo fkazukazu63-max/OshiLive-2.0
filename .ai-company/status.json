@@ -1,9 +1,9 @@
 {
   "project": "OshiLive 3.0",
-  "implementationStatus": "validation-passed-awaiting-secret-rotation",
-  "implementationMessage": "The AI-company workflow setup is complete on PR #1. The hard-coded YouTube API key was removed from working source, the server syntax error was repaired, and the first GitHub Actions validation completed successfully.",
+  "implementationStatus": "awaiting-runtime-secret-configuration",
+  "implementationMessage": "The leaked YouTube API key has been revoked by the project owner. The repository no longer contains an obvious hard-coded Google API key, the server syntax issue is repaired, and the initial CI validation passed. A replacement YOUTUBE_API_KEY still needs to be configured in the runtime environment and the YouTube API flows need an end-to-end validation before release.",
   "readyForAudit": true,
-  "safetyStatus": "stopped",
-  "safetyMessage": "STOPPED: automated validation passes, but a YouTube API key was previously committed to this public repository. Removing it from source is not sufficient; the exposed credential must be revoked/rotated in Google Cloud before the auditor can mark this project safe.",
-  "safetyCheckedAt": "2026-09-05T20:35:00+07:00"
+  "safetyStatus": "review",
+  "safetyMessage": "REVIEW: the exposed credential has been revoked and no obvious hard-coded Google API key remains on the current main branch. Automated syntax/secret checks previously passed. Final SAFE approval is pending runtime configuration of a replacement YOUTUBE_API_KEY and verification that live-status, upcoming-streams, and channel-by-url flows work without regression.",
+  "safetyCheckedAt": "2026-09-05T21:14:32+07:00"
 }

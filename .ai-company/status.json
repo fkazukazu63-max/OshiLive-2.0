@@ -1,0 +1,9 @@
+{
+  "project": "OshiLive 3.0",
+  "implementationStatus": "validation-passed-awaiting-secret-rotation",
+  "implementationMessage": "The AI-company workflow setup is complete on PR #1. The hard-coded YouTube API key was removed from working source, the server syntax error was repaired, and the first GitHub Actions validation completed successfully.",
+  "readyForAudit": true,
+  "safetyStatus": "stopped",
+  "safetyMessage": "STOPPED: automated validation passes, but a YouTube API key was previously committed to this public repository. Removing it from source is not sufficient; the exposed credential must be revoked/rotated in Google Cloud before the auditor can mark this project safe.",
+  "safetyCheckedAt": "2026-09-05T20:35:00+07:00"
+}

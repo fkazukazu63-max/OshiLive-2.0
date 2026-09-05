@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "projects": [
+    {
+      "id": "oshilive",
+      "name": "OshiLive 3.0",
+      "repository": "fkazukazu63-max/OshiLive-2.0",
+      "allowedPaths": [
+        ".github/**",
+        ".ai-company/**",
+        "AGENTS.md",
+        "index.html",
+        "script.js",
+        "server.js",
+        "service-worker.js",
+        "style.css",
+        "manifest.json",
+        "package.json",
+        "package-lock.json",
+        "images/**"
+      ],
+      "forbiddenOperations": [
+        "access unrelated repositories",
+        "publish or deploy without explicit approval",
+        "purchase or change billing",
+        "bypass authentication or authorization",
+        "hard-code secrets",
+        "mass delete or destructive overwrite"
+      ]
+    }
+  ]
+}

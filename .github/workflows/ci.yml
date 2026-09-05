@@ -1,0 +1,42 @@
+name: OshiLive CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Check for obvious hard-coded Google API keys
+        shell: bash
+        run: |
+          if git grep -q 'AIza' -- '*.js' '*.json' ':!package-lock.json'; then
+            echo 'Potential hard-coded API key detected. Failing validation.'
+            exit 1
+          fi
+
+      - name: Confirm audit scope files exist
+        run: |
+          test -f .ai-company/approved-projects.json
+          test -f .ai-company/status.json
+          test -f AGENTS.md

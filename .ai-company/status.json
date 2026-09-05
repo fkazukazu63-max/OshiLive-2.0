@@ -1,9 +1,9 @@
 {
   "project": "OshiLive 3.0",
-  "implementationStatus": "awaiting-chatgpt-sites-secret-configuration",
-  "implementationMessage": "The leaked YouTube API key has been revoked. The GitHub repository no longer contains an obvious hard-coded Google API key and its CI validation passes. The current OshiLive 3.0 production workflow is ChatGPT Sites, but this legacy OshiLive-2.0 repository has not been verified as the exact source of the live Sites deployment. Configure YOUTUBE_API_KEY in the ChatGPT Site's owner-only Secrets settings, then validate the YouTube API flows on the Site.",
+  "implementationStatus": "secret-configured-awaiting-live-site-validation",
+  "implementationMessage": "The previously exposed YouTube API key has been revoked. The owner has configured a replacement YOUTUBE_API_KEY as a secret in the OshiLive 3.0 ChatGPT Site. The GitHub repository no longer contains an obvious hard-coded Google API key and its CI validation passes. Final release validation is now limited to the live ChatGPT Site runtime.",
   "readyForAudit": true,
   "safetyStatus": "review",
-  "safetyMessage": "REVIEW: credential leakage is remediated, but final SAFE approval is pending two pieces of evidence: (1) YOUTUBE_API_KEY is configured in the OshiLive 3.0 ChatGPT Site Secrets, and (2) live-status, upcoming-streams, and channel-by-url are validated on the actual deployed Site. GitHub CI alone does not prove the current Sites deployment is healthy because the repository-to-Site source mapping is not yet verified.",
-  "safetyCheckedAt": "2026-09-05T21:24:43+07:00"
+  "safetyMessage": "REVIEW: secret remediation is complete and the replacement YOUTUBE_API_KEY is configured in ChatGPT Sites. Final SAFE approval is pending end-to-end validation on the actual deployed OshiLive 3.0 Site for live-status, upcoming-streams, and channel-by-url. The current ChatGPT session cannot directly execute requests against the live chatgpt.site URL, so deployed runtime evidence is still missing.",
+  "safetyCheckedAt": "2026-09-05T21:28:38+07:00"
 }
